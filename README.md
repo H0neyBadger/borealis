@@ -8,17 +8,17 @@ You can see the planned features in the Projects tab.
 
 Documentation is available [right here](https://github.com/natinusala/borealis/wiki). Warning: may not be up to date.
 
-## Building the example for Switch
+## Building the demo for Switch
 
 To build for Switch, a standard development environment must first be set up. In order to do so, [refer to the Getting Started guide](https://devkitpro.org/wiki/Getting_Started).
 
 ```bash
 (sudo) (dkp-)pacman -S switch-glfw switch-mesa switch-glm
 make -j
-nxlink -s borealis_example.nro
+nxlink -s borealis_demo.nro
 ```
 
-## Building the example for PC
+## Building the demo for PC
 
 To build for PC, the following components are required:
 
@@ -32,12 +32,12 @@ Please refer to the usual sources of information for your particular operating s
 ```bash
 meson build
 ninja -C build
-./build/borealis_example
+./build/borealis_demo
 ```
 
 Also, please note that the `resources` folder must be available in the working directory, otherwise the program will fail to find the shaders.
 
-### Building the example for Windows using msys2
+### Building the demo for Windows using msys2
 
 msys2 provides all packages needed to build this project:
 
@@ -45,10 +45,10 @@ msys2 provides all packages needed to build this project:
 pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-meson mingw-w64-x86_64-ninja mingw-w64-x86_64-pkg-config mingw-w64-x86_64-glfw mingw-w64-x86_64-glm
 meson build
 ninja -C build
-./build/borealis_example
+./build/borealis_demo
 ```
 
-### Including in your project (TL;DR: see the example makefile in this repo)
+### Including in your project (TL;DR: see the demo makefile in this repo)
 0. Your project must be built as C++17 (`-std=c++1z`). You also need to remove `-fno-rtti` and `-fno-exceptions` if you have them
 1. Use a submodule (or even better, a [subrepo](https://github.com/ingydotnet/git-subrepo)) to clone this repository in your project
 2. Copy the `resources` folder to the root of your project

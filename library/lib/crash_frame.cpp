@@ -48,7 +48,7 @@ CrashFrame::CrashFrame(std::string text)
     this->hint->setParent(this);
 }
 
-void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void CrashFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     nvgSave(vg);
 
@@ -113,37 +113,37 @@ View* CrashFrame::getDefaultFocus()
     return this->button->getDefaultFocus();
 }
 
-void CrashFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    // Label
-    this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
-    this->label->invalidate(true);
+// void CrashFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     // Label
+//     this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
+//     this->label->invalidate();
 
-    this->label->setBoundaries(
-        this->x + this->width / 2 - this->label->getWidth() / 2,
-        this->y + (this->height - style->AppletFrame.footerHeight) / 2,
-        this->label->getWidth(),
-        this->label->getHeight());
+//     this->label->setBoundaries(
+//         this->x + this->width / 2 - this->label->getWidth() / 2,
+//         this->y + (this->height - style->AppletFrame.footerHeight) / 2,
+//         this->label->getWidth(),
+//         this->label->getHeight());
 
-    // Button
-    this->button->setBoundaries(
-        this->x + this->width / 2 - style->CrashFrame.buttonWidth / 2,
-        this->y + this->height - style->AppletFrame.footerHeight - style->CrashFrame.boxSpacing - style->CrashFrame.buttonHeight,
-        style->CrashFrame.buttonWidth,
-        style->CrashFrame.buttonHeight);
-    this->button->invalidate();
+//     // Button
+//     this->button->setBoundaries(
+//         this->x + this->width / 2 - style->CrashFrame.buttonWidth / 2,
+//         this->y + this->height - style->AppletFrame.footerHeight - style->CrashFrame.boxSpacing - style->CrashFrame.buttonHeight,
+//         style->CrashFrame.buttonWidth,
+//         style->CrashFrame.buttonHeight);
+//     this->button->invalidate();
 
-    // Hint
-    // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint
-    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+//     // Hint
+//     // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint
+//     unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
 
-    this->hint->setBoundaries(
-        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
-        this->y + this->height - style->AppletFrame.footerHeight,
-        hintWidth,
-        style->AppletFrame.footerHeight);
-    this->hint->invalidate();
-}
+//     this->hint->setBoundaries(
+//         this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+//         this->y + this->height - style->AppletFrame.footerHeight,
+//         hintWidth,
+//         style->AppletFrame.footerHeight);
+//     this->hint->invalidate();
+// }
 
 CrashFrame::~CrashFrame()
 {

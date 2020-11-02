@@ -67,7 +67,7 @@ void StagedAppletFrame::enterStage(int index, bool requestFocus)
         Application::giveFocus(this->getDefaultFocus());
 }
 
-void StagedAppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void StagedAppletFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     AppletFrame::draw(vg, x, y, width, height, style, ctx);
 

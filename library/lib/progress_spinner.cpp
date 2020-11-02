@@ -51,13 +51,13 @@ void ProgressSpinner::restartAnimation()
     menu_animation_push(&entry);
 }
 
-void ProgressSpinner::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    this->height = std::min(this->width, this->height);
-    this->width  = this->height;
-}
+// void ProgressSpinner::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     this->height = std::min(this->width, this->height);
+//     this->width  = this->height;
+// }
 
-void ProgressSpinner::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void ProgressSpinner::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     NVGcolor barColor = a(ctx->theme->spinnerBarColor);
 

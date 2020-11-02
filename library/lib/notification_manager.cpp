@@ -31,9 +31,9 @@ NotificationManager::NotificationManager()
     std::memset(this->notifications, 0, sizeof(Notification*) * BRLS_NOTIFICATIONS_MAX);
 }
 
-void NotificationManager::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void NotificationManager::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
 {
-    for (size_t i = 0; i < BRLS_NOTIFICATIONS_MAX; i++)
+    /*for (size_t i = 0; i < BRLS_NOTIFICATIONS_MAX; i++)
     {
         if (this->notifications[i])
         {
@@ -53,7 +53,7 @@ void NotificationManager::draw(NVGcontext* vg, int x, int y, unsigned width, uns
             if (alpha != 1.0f)
                 nvgTranslate(vg, -translation, 0);
         }
-    }
+    } TODO: restore that */
 }
 
 void NotificationManager::notify(std::string text)
@@ -80,13 +80,13 @@ void NotificationManager::notify(std::string text)
     brls::Logger::debug("Showing notification \"{}\"", text);
 
     Notification* notification = new Notification(text);
-    notification->setParent(this);
+    // notification->setParent(this); TODO: restore
     notification->show([]() {});
 
     // Timeout timer
     menu_timer_ctx_entry_t entry;
 
-    entry.duration = Application::getStyle()->AnimationDuration.notificationTimeout;
+    entry.duration = Application::getStyle()["brls/animations_durations/notifications_timeout"];
     entry.tick     = [](void*) {};
     entry.userdata = nullptr;
     entry.cb       = [this, notification, i](void* userdata) {
@@ -106,43 +106,43 @@ void NotificationManager::notify(std::string text)
 
 void NotificationManager::layoutNotification(size_t index)
 {
-    Notification* notification = this->notifications[index];
+    //     Notification* notification = this->notifications[index];
 
-    if (!notification)
-        return;
+    //     if (!notification)
+    //         return;
 
-    Style* style = Application::getStyle();
+    //     Style* style = Application::getStyle();
 
-    // Get the position of the last notification
-    Notification* lastNotification = nullptr;
-    for (size_t i = 0; i < index; i++)
-    {
-        if (this->notifications[i])
-            lastNotification = this->notifications[i];
-    }
+    //     // Get the position of the last notification
+    //     Notification* lastNotification = nullptr;
+    //     for (size_t i = 0; i < index; i++)
+    //     {
+    //         if (this->notifications[i])
+    //             lastNotification = this->notifications[i];
+    //     }
 
-    unsigned y = lastNotification ? (lastNotification->getY() + lastNotification->getHeight()) : 0;
+    //     unsigned y = lastNotification ? (lastNotification->getY() + lastNotification->getHeight()) : 0;
 
-    // Layout the notification
-    unsigned width = style->Notification.width;
-    notification->setBoundaries(
-        this->getX() + this->getWidth() - width,
-        this->getY() + y,
-        width,
-        0 // height is dynamic
-    );
+    //     // Layout the notification
+    //     unsigned width = style->Notification.width;
+    //     notification->setBoundaries(
+    //         this->getX() + this->getWidth() - width,
+    //         this->getY() + y,
+    //         width,
+    //         0 // height is dynamic
+    //     );
 
-    notification->invalidate(); // TODO: call layout directly to fix posting multiple notifications in one frame
+    //     notification->invalidate(); // TODO: call layout directly to fix posting multiple notifications in one frame
 }
 
-void NotificationManager::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    for (size_t i = 0; i < BRLS_NOTIFICATIONS_MAX; i++)
-    {
-        if (this->notifications[i])
-            this->layoutNotification(i);
-    }
-}
+// void NotificationManager::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     for (size_t i = 0; i < BRLS_NOTIFICATIONS_MAX; i++)
+//     {
+//         if (this->notifications[i])
+//             this->layoutNotification(i);
+//     }
+// }
 
 NotificationManager::~NotificationManager()
 {
@@ -157,49 +157,49 @@ Notification::Notification(std::string text)
 {
     this->setBackground(ViewBackground::BACKDROP);
 
-    this->label = new Label(LabelStyle::NOTIFICATION, text, true);
-    label->setParent(this);
+    // this->label = new Label(LabelStyle::NOTIFICATION, text, true); TODO: restore that
+    // label->setParent(this); TODO: restore that
 }
 
 Notification::~Notification()
 {
-    delete this->label;
+    // delete this->label; TODO: restore that
 }
 
-void Notification::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void Notification::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
 {
-    this->label->frame(ctx);
+    //this->label->frame(ctx); TODO: restore that
 }
 
-void Notification::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    unsigned padding  = style->Notification.padding;
-    unsigned fontSize = style->Label.notificationFontSize;
-    float lineHeight  = style->Label.notificationLineHeight;
+// void Notification::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     unsigned padding  = style->Notification.padding;
+//     unsigned fontSize = style->Label.notificationFontSize;
+//     float lineHeight  = style->Label.notificationLineHeight;
 
-    // Layout the label
-    this->label->setWidth(this->getWidth() - padding * 2);
-    this->label->setHeight(0); // height is dynamic
+//     // Layout the label
+//     this->label->setWidth(this->getWidth() - padding * 2);
+//     this->label->setHeight(0); // height is dynamic
 
-    this->label->invalidate(true); // layout directly to update height
+//     this->label->invalidate(); // layout directly to update height
 
-    unsigned minLabelHeight = (unsigned int)(lineHeight * fontSize) + fontSize; // 2 lines
-    unsigned labelYAdvance  = padding;
-    if (this->label->getHeight() < minLabelHeight)
-    {
-        labelYAdvance += (minLabelHeight - this->label->getHeight()) / 2;
-    }
+//     unsigned minLabelHeight = (unsigned int)(lineHeight * fontSize) + fontSize; // 2 lines
+//     unsigned labelYAdvance  = padding;
+//     if (this->label->getHeight() < minLabelHeight)
+//     {
+//         labelYAdvance += (minLabelHeight - this->label->getHeight()) / 2;
+//     }
 
-    this->label->setBoundaries(
-        this->getX() + padding,
-        this->getY() + labelYAdvance,
-        this->label->getWidth(),
-        this->label->getHeight());
+//     this->label->setBoundaries(
+//         this->getX() + padding,
+//         this->getY() + labelYAdvance,
+//         this->label->getWidth(),
+//         this->label->getHeight());
 
-    // Update our own height
-    this->setHeight(std::max(
-        this->label->getHeight() + padding * 2,
-        minLabelHeight + padding * 2));
-}
+//     // Update our own height
+//     this->setHeight(std::max(
+//         this->label->getHeight() + padding * 2,
+//         minLabelHeight + padding * 2));
+// }
 
 }; // namespace brls

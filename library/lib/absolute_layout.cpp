@@ -29,17 +29,17 @@ void AbsoluteLayout::addView(View* view)
     this->invalidate();
 }
 
-void AbsoluteLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void AbsoluteLayout::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     for (View* view : this->children)
         view->frame(ctx);
 }
 
-void AbsoluteLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    for (View* view : this->children)
-        view->invalidate();
-}
+// void AbsoluteLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     for (View* view : this->children)
+//         view->invalidate();
+// }
 
 void AbsoluteLayout::onWindowSizeChanged()
 {

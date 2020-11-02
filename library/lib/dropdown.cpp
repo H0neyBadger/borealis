@@ -92,7 +92,7 @@ void Dropdown::show(std::function<void(void)> cb, bool animate, ViewAnimation an
     menu_animation_push(&entry);
 }
 
-void Dropdown::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void Dropdown::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     unsigned top = this->list->getY() - style->Dropdown.headerHeight - style->Dropdown.listPadding;
 
@@ -154,30 +154,30 @@ unsigned Dropdown::getShowAnimationDuration(ViewAnimation animation)
     return View::getShowAnimationDuration(animation) / 2;
 }
 
-void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    // Layout and move the list
-    unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->Dropdown.listItemHeight - (unsigned)this->topOffset;
-    unsigned listWidth  = style->Dropdown.listWidth + style->List.marginLeftRight * 2;
+// void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     // Layout and move the list
+//     unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->Dropdown.listItemHeight - (unsigned)this->topOffset;
+//     unsigned listWidth  = style->Dropdown.listWidth + style->List.marginLeftRight * 2;
 
-    this->list->setBoundaries(
-        this->width / 2 - listWidth / 2,
-        this->height - style->AppletFrame.footerHeight - listHeight - style->Dropdown.listPadding + (unsigned)this->topOffset,
-        listWidth,
-        listHeight);
-    this->list->invalidate(true); // call layout directly to update scrolling
+//     this->list->setBoundaries(
+//         this->width / 2 - listWidth / 2,
+//         this->height - style->AppletFrame.footerHeight - listHeight - style->Dropdown.listPadding + (unsigned)this->topOffset,
+//         listWidth,
+//         listHeight);
+//     this->list->invalidate(); // call layout directly to update scrolling
 
-    // Hint
-    // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint
-    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+//     // Hint
+//     // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint
+//     unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
 
-    this->hint->setBoundaries(
-        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
-        this->y + this->height - style->AppletFrame.footerHeight,
-        hintWidth,
-        style->AppletFrame.footerHeight);
-    this->hint->invalidate();
-}
+//     this->hint->setBoundaries(
+//         this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+//         this->y + this->height - style->AppletFrame.footerHeight,
+//         hintWidth,
+//         style->AppletFrame.footerHeight);
+//     this->hint->invalidate();
+// }
 
 View* Dropdown::getDefaultFocus()
 {

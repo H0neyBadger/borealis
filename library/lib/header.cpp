@@ -32,7 +32,7 @@ Header::Header(std::string label, bool separator, std::string sublabel)
     this->setHeight(style->Header.height);
 }
 
-void Header::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void Header::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     unsigned padding = style->Header.padding;
 

@@ -26,7 +26,7 @@ MaterialIcon::MaterialIcon(std::string icon)
 {
 }
 
-void MaterialIcon::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void MaterialIcon::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     NVGcolor color = a(this->getColor(ctx->theme));
 
@@ -39,11 +39,11 @@ void MaterialIcon::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned h
     nvgText(vg, this->middleX, this->middleY, this->icon.c_str(), nullptr);
 }
 
-void MaterialIcon::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    this->middleX = this->getX() + this->getWidth() / 2;
-    this->middleY = this->getY() + this->getHeight() / 2;
-}
+// void MaterialIcon::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     this->middleX = this->getX() + this->getWidth() / 2;
+//     this->middleY = this->getY() + this->getHeight() / 2;
+// }
 
 void MaterialIcon::setColor(NVGcolor color)
 {

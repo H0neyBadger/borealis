@@ -103,7 +103,7 @@ SidebarItem::SidebarItem(std::string label, Sidebar* sidebar)
     this->registerAction("brls/hints/ok"_i18n, Key::A, [this] { return this->onClick(); });
 }
 
-void SidebarItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void SidebarItem::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     // Label
     nvgFillColor(vg, a(this->active ? ctx->theme->activeTabColor : ctx->theme->textColor));
@@ -140,7 +140,7 @@ SidebarSeparator::SidebarSeparator()
     this->setHeight(style->Sidebar.Separator.height);
 }
 
-void SidebarSeparator::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void SidebarSeparator::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     nvgFillColor(vg, a(ctx->theme->sidebarSeparatorColor));
     nvgBeginPath(vg);

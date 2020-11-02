@@ -36,7 +36,7 @@ class Header : public View
   public:
     Header(std::string label, bool separator = true, std::string sublabel = "");
 
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx) override;
 };
 
 } // namespace brls

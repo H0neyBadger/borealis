@@ -63,9 +63,8 @@ class ListItem : public View
   public:
     ListItem(std::string label, std::string description = "", std::string subLabel = "");
 
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-    void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
+    void draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx) override;
+    void getHighlightInsets(float* top, float* right, float* bottom, float* left) override;
     virtual bool onClick();
     View* getDefaultFocus() override;
 

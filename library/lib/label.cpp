@@ -18,6 +18,7 @@
 */
 
 #include <borealis/application.hpp>
+#include <borealis/box.hpp>
 #include <borealis/label.hpp>
 
 namespace brls
@@ -85,16 +86,16 @@ void Label::setFontSize(unsigned size)
 {
     this->fontSize = size;
 
-    if (this->getParent())
-        this->getParent()->invalidate();
+    /*if (this->getParent())
+        this->getParent()->invalidate();*/
 }
 
 void Label::setText(std::string text)
 {
     this->text = text;
 
-    if (this->hasParent())
-        this->getParent()->invalidate();
+    /*if (this->hasParent())
+        this->getParent()->invalidate();*/
 }
 
 void Label::setStyle(LabelStyle style)
@@ -102,44 +103,44 @@ void Label::setStyle(LabelStyle style)
     this->labelStyle = style;
 }
 
-void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     nvgSave(vg);
+//     nvgReset(vg);
+
+//     nvgFontSize(vg, this->fontSize);
+//     nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
+//     nvgFontFaceId(vg, this->getFont(stash));
+//     nvgTextLineHeight(vg, this->lineHeight);
+
+//     float bounds[4];
+
+//     // Update width or height to text bounds
+//     if (this->multiline)
+//     {
+//         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
+
+//         this->height = bounds[3] - bounds[1]; // ymax - ymin
+//     }
+//     else
+//     {
+//         nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
+
+//         unsigned oldWidth = this->width;
+//         this->width       = bounds[2] - bounds[0]; // xmax - xmin
+
+//         // offset the position to compensate the width change
+//         // and keep right alignment
+//         if (this->horizontalAlign == NVG_ALIGN_RIGHT)
+//             this->x += oldWidth - this->width;
+//     }
+
+//     nvgRestore(vg);
+// }
+
+void Label::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
 {
-    nvgSave(vg);
-    nvgReset(vg);
-
-    nvgFontSize(vg, this->fontSize);
-    nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
-    nvgFontFaceId(vg, this->getFont(stash));
-    nvgTextLineHeight(vg, this->lineHeight);
-
-    float bounds[4];
-
-    // Update width or height to text bounds
-    if (this->multiline)
-    {
-        nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
-
-        this->height = bounds[3] - bounds[1]; // ymax - ymin
-    }
-    else
-    {
-        nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
-
-        unsigned oldWidth = this->width;
-        this->width       = bounds[2] - bounds[0]; // xmax - xmin
-
-        // offset the position to compensate the width change
-        // and keep right alignment
-        if (this->horizontalAlign == NVG_ALIGN_RIGHT)
-            this->x += oldWidth - this->width;
-    }
-
-    nvgRestore(vg);
-}
-
-void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
-{
-    nvgFillColor(vg, this->getColor(ctx->theme));
+    /*nvgFillColor(vg, this->getColor(ctx->theme));
 
     // Draw
     nvgFontSize(vg, this->fontSize);
@@ -170,7 +171,7 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
             nvgText(vg, x, y + height, this->text.c_str(), nullptr);
         else
             nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // NVG_ALIGN_MIDDLE
-    }
+    } TODO: restore that*/
 }
 
 void Label::setColor(NVGcolor color)

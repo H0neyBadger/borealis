@@ -197,38 +197,38 @@ GenericEvent* ListItem::getClickEvent()
     return &this->clickEvent;
 }
 
-void ListItem::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    // Description
-    if (this->descriptionView)
-    {
-        unsigned indent = style->List.Item.descriptionIndent;
+// void ListItem::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     // Description
+//     if (this->descriptionView)
+//     {
+//         unsigned indent = style->List.Item.descriptionIndent;
 
-        if (this->indented)
-            indent += style->List.Item.indent;
+//         if (this->indented)
+//             indent += style->List.Item.indent;
 
-        this->height = style->List.Item.height;
-        this->descriptionView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.descriptionSpacing, this->width - indent * 2, 0);
-        this->descriptionView->invalidate(true); // we must call layout directly
-        this->height += this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
-    }
+//         this->height = style->List.Item.height;
+//         this->descriptionView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.descriptionSpacing, this->width - indent * 2, 0);
+//         this->descriptionView->invalidate(); // we must call layout directly
+//         this->height += this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
+//     }
 
-    // Thumbnail
-    if (this->thumbnailView)
-    {
-        Style* style           = Application::getStyle();
-        unsigned thumbnailSize = height - style->List.Item.thumbnailPadding * 2;
+//     // Thumbnail
+//     if (this->thumbnailView)
+//     {
+//         Style* style           = Application::getStyle();
+//         unsigned thumbnailSize = height - style->List.Item.thumbnailPadding * 2;
 
-        this->thumbnailView->setBoundaries(
-            x + style->List.Item.thumbnailPadding,
-            y + style->List.Item.thumbnailPadding,
-            thumbnailSize,
-            thumbnailSize);
-        this->thumbnailView->invalidate();
-    }
-}
+//         this->thumbnailView->setBoundaries(
+//             x + style->List.Item.thumbnailPadding,
+//             y + style->List.Item.thumbnailPadding,
+//             thumbnailSize,
+//             thumbnailSize);
+//         this->thumbnailView->invalidate();
+//     }
+// }
 
-void ListItem::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
+void ListItem::getHighlightInsets(float* top, float* right, float* bottom, float* left)
 {
     Style* style = Application::getStyle();
     View::getHighlightInsets(top, right, bottom, left);
@@ -296,11 +296,11 @@ View* ListItem::getDefaultFocus()
     return this;
 }
 
-void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void ListItem::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
-    unsigned baseHeight = this->height;
-    bool hasSubLabel    = this->subLabel != "";
-    bool hasThumbnail   = this->thumbnailView;
+    float baseHeight  = this->getHeight();
+    bool hasSubLabel  = this->subLabel != "";
+    bool hasThumbnail = this->thumbnailView;
 
     unsigned leftPadding = hasThumbnail ? this->thumbnailView->getWidth() + style->List.Item.thumbnailPadding * 2 : style->List.Item.padding;
 

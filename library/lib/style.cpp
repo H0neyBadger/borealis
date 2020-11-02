@@ -23,12 +23,74 @@
 namespace brls
 {
 
+static StyleValues styleValues = {
+    { "brls/animations_durations/show", 250 },
+    { "brls/animations_durations/show_slide", 125 },
+
+    { "brls/applet_frame/padding_sides", 30 },
+
+    { "brls/applet_frame/header_height", 88 },
+    { "brls/applet_frame/header_padding_top_bottom", 15 },
+    { "brls/applet_frame/header_padding_sides", 35 },
+    { "brls/applet_frame/header_image_title_spacing", 18 },
+
+    { "brls/applet_frame/footer_height", 73 },
+    { "brls/applet_frame/footer_padding_top_bottom", 20 },
+    { "brls/applet_frame/footer_padding_sides", 25 },
+};
+
+static Style style(&styleValues);
+
+Style getStyle()
+{
+    return style;
+}
+
+StyleValues::StyleValues(std::initializer_list<std::pair<std::string, float>> list)
+{
+    for (std::pair<std::string, float> metric : list)
+        this->values.insert(metric);
+}
+
+void StyleValues::addMetric(std::string name, float metric)
+{
+    this->values.insert(std::make_pair(name, metric));
+}
+
+float StyleValues::getMetric(std::string name)
+{
+    if (this->values.count(name) == 0)
+        throw std::logic_error("Unknown style metric \"" + name + "\"");
+
+    return this->values[name];
+}
+
+Style::Style(StyleValues* values)
+    : values(values)
+{
+}
+
+float Style::getMetric(std::string name)
+{
+    return this->values->getMetric(name);
+}
+
+void Style::addMetric(std::string name, float metric)
+{
+    return this->values->addMetric(name, metric);
+}
+
+float Style::operator[](std::string name)
+{
+    return this->getMetric(name);
+}
+
+/*
 HorizonStyle::HorizonStyle()
 {
     this->AppletFrame = {
-        .headerHeightRegular = 88,
+        .headerHeightRegular = ,
         .headerHeightPopup   = 129,
-        .footerHeight        = 73,
 
         .imageLeftPadding = 64,
         .imageTopPadding  = 20,
@@ -227,7 +289,6 @@ HorizonStyle::HorizonStyle()
     };
 
     this->AnimationDuration = {
-        .show      = 250,
         .showSlide = 125,
 
         .highlight = 100,
@@ -265,5 +326,5 @@ HorizonStyle::HorizonStyle()
         .shadowOffset  = 10.0f
     };
 }
-
+*/
 } // namespace brls

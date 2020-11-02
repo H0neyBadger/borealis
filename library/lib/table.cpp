@@ -29,7 +29,7 @@ TableRow* Table::addRow(TableRowType type, std::string label, std::string value)
     return row;
 }
 
-void Table::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void Table::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     Theme* theme      = ctx->theme;
     unsigned yAdvance = 0;
@@ -89,25 +89,25 @@ void Table::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
     }
 }
 
-void Table::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    unsigned height = 0;
+// void Table::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     unsigned height = 0;
 
-    for (TableRow* row : this->rows)
-    {
-        switch (row->getType())
-        {
-            case TableRowType::HEADER:
-                height += style->TableRow.headerHeight;
-                break;
-            case TableRowType::BODY:
-                height += style->TableRow.bodyHeight;
-                break;
-        }
-    }
+//     for (TableRow* row : this->rows)
+//     {
+//         switch (row->getType())
+//         {
+//             case TableRowType::HEADER:
+//                 height += style->TableRow.headerHeight;
+//                 break;
+//             case TableRowType::BODY:
+//                 height += style->TableRow.bodyHeight;
+//                 break;
+//         }
+//     }
 
-    this->setHeight(height);
-}
+//     this->setHeight(height);
+// }
 
 Table::~Table()
 {

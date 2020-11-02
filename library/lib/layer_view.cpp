@@ -97,20 +97,20 @@ View* LayerView::getDefaultFocus()
     return nullptr;
 }
 
-void LayerView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void LayerView::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
         this->layers[this->selectedIndex]->frame(ctx);
 }
 
-void LayerView::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
-    {
-        this->layers[this->selectedIndex]->setBoundaries(this->getX(), this->getY(), this->getWidth(), this->getHeight());
-        this->layers[this->selectedIndex]->invalidate();
-    }
-}
+// void LayerView::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+//     {
+//         this->layers[this->selectedIndex]->setBoundaries(this->getX(), this->getY(), this->getWidth(), this->getHeight());
+//         this->layers[this->selectedIndex]->invalidate();
+//     }
+// }
 
 void LayerView::willAppear(bool resetState)
 {

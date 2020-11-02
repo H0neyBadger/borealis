@@ -79,7 +79,7 @@ PopupFrame::PopupFrame(std::string title, AppletFrame* contentView, std::string 
     this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
 }
 
-void PopupFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void PopupFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     // Backdrop
     nvgFillColor(vg, a(ctx->theme->dropdownBackgroundColor));
@@ -115,11 +115,11 @@ unsigned PopupFrame::getShowAnimationDuration(ViewAnimation animation)
     return View::getShowAnimationDuration(animation) / 2;
 }
 
-void PopupFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, this->getHeight());
-    this->contentView->invalidate();
-}
+// void PopupFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, this->getHeight());
+//     this->contentView->invalidate();
+// }
 
 View* PopupFrame::getDefaultFocus()
 {

@@ -37,7 +37,7 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus)
 {
 }
 
-void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void BoxLayout::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     // Draw children
     for (BoxLayoutChild* child : this->children)
@@ -150,130 +150,130 @@ void BoxLayout::clear(bool free)
         this->removeView(0, free);
 }
 
-void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    // Vertical orientation
-    if (this->orientation == BoxLayoutOrientation::VERTICAL)
-    {
-        unsigned entriesHeight = 0;
-        int yAdvance           = this->y + this->marginTop;
+// void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     // Vertical orientation
+//     if (this->orientation == BoxLayoutOrientation::VERTICAL)
+//     {
+//         unsigned entriesHeight = 0;
+//         int yAdvance           = this->y + this->marginTop;
 
-        for (size_t i = 0; i < this->children.size(); i++)
-        {
-            BoxLayoutChild* child = this->children[i];
-            unsigned childHeight  = child->view->getHeight();
+//         for (size_t i = 0; i < this->children.size(); i++)
+//         {
+//             BoxLayoutChild* child = this->children[i];
+//             unsigned childHeight  = child->view->getHeight();
 
-            if (child->fill)
-                child->view->setBoundaries(this->x + this->marginLeft,
-                    yAdvance,
-                    this->width - this->marginLeft - this->marginRight,
-                    this->y + this->height - yAdvance - this->marginBottom);
-            else
-                child->view->setBoundaries(this->x + this->marginLeft,
-                    yAdvance,
-                    this->width - this->marginLeft - this->marginRight,
-                    child->view->getHeight(false));
+//             if (child->fill)
+//                 child->view->setBoundaries(this->x + this->marginLeft,
+//                     yAdvance,
+//                     this->width - this->marginLeft - this->marginRight,
+//                     this->y + this->height - yAdvance - this->marginBottom);
+//             else
+//                 child->view->setBoundaries(this->x + this->marginLeft,
+//                     yAdvance,
+//                     this->width - this->marginLeft - this->marginRight,
+//                     child->view->getHeight(false));
 
-            child->view->invalidate(true); // call layout directly in case height is updated
-            childHeight = child->view->getHeight();
+//             child->view->invalidate(); // call layout directly in case height is updated
+//             childHeight = child->view->getHeight();
 
-            int spacing = (int)this->spacing;
-            View* next  = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+//             int spacing = (int)this->spacing;
+//             View* next  = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
 
-            this->customSpacing(child->view, next, &spacing);
+//             this->customSpacing(child->view, next, &spacing);
 
-            if (child->view->isCollapsed())
-                spacing = 0;
+//             if (child->view->isCollapsed())
+//                 spacing = 0;
 
-            if (!child->view->isHidden())
-                entriesHeight += spacing + childHeight;
+//             if (!child->view->isHidden())
+//                 entriesHeight += spacing + childHeight;
 
-            yAdvance += spacing + childHeight;
-        }
+//             yAdvance += spacing + childHeight;
+//         }
 
-        // TODO: apply gravity
+//         // TODO: apply gravity
 
-        // Update height if needed
-        if (this->resize)
-            this->setHeight(entriesHeight - spacing + this->marginTop + this->marginBottom);
-    }
-    // Horizontal orientation
-    else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
-    {
-        // Layout
-        int xAdvance = this->x + this->marginLeft;
-        for (size_t i = 0; i < this->children.size(); i++)
-        {
-            BoxLayoutChild* child = this->children[i];
-            unsigned childWidth   = child->view->getWidth();
+//         // Update height if needed
+//         if (this->resize)
+//             this->setHeight(entriesHeight - spacing + this->marginTop + this->marginBottom);
+//     }
+//     // Horizontal orientation
+//     else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
+//     {
+//         // Layout
+//         int xAdvance = this->x + this->marginLeft;
+//         for (size_t i = 0; i < this->children.size(); i++)
+//         {
+//             BoxLayoutChild* child = this->children[i];
+//             unsigned childWidth   = child->view->getWidth();
 
-            if (child->fill)
-                child->view->setBoundaries(xAdvance,
-                    this->y + this->marginTop,
-                    this->x + this->width - xAdvance - this->marginRight,
-                    this->height - this->marginTop - this->marginBottom);
-            else
-                child->view->setBoundaries(xAdvance,
-                    this->y + this->marginTop,
-                    childWidth,
-                    this->height - this->marginTop - this->marginBottom);
+//             if (child->fill)
+//                 child->view->setBoundaries(xAdvance,
+//                     this->y + this->marginTop,
+//                     this->x + this->width - xAdvance - this->marginRight,
+//                     this->height - this->marginTop - this->marginBottom);
+//             else
+//                 child->view->setBoundaries(xAdvance,
+//                     this->y + this->marginTop,
+//                     childWidth,
+//                     this->height - this->marginTop - this->marginBottom);
 
-            child->view->invalidate(true); // call layout directly in case width is updated
-            childWidth = child->view->getWidth();
+//             child->view->invalidate(); // call layout directly in case width is updated
+//             childWidth = child->view->getWidth();
 
-            int spacing = (int)this->spacing;
+//             int spacing = (int)this->spacing;
 
-            View* next = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+//             View* next = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
 
-            this->customSpacing(child->view, next, &spacing);
+//             this->customSpacing(child->view, next, &spacing);
 
-            if (child->view->isCollapsed())
-                spacing = 0;
+//             if (child->view->isCollapsed())
+//                 spacing = 0;
 
-            xAdvance += spacing + childWidth;
-        }
+//             xAdvance += spacing + childWidth;
+//         }
 
-        // Apply gravity
-        // TODO: more efficient gravity implementation?
-        if (!this->children.empty())
-        {
-            switch (this->gravity)
-            {
-                case BoxLayoutGravity::RIGHT:
-                {
-                    // Take the remaining empty space between the last view's
-                    // right boundary and ours and push all views by this amount
-                    View* lastView = this->children[this->children.size() - 1]->view;
+//         // Apply gravity
+//         // TODO: more efficient gravity implementation?
+//         if (!this->children.empty())
+//         {
+//             switch (this->gravity)
+//             {
+//                 case BoxLayoutGravity::RIGHT:
+//                 {
+//                     // Take the remaining empty space between the last view's
+//                     // right boundary and ours and push all views by this amount
+//                     View* lastView = this->children[this->children.size() - 1]->view;
 
-                    unsigned lastViewRight = lastView->getX() + lastView->getWidth();
-                    unsigned ourRight      = this->getX() + this->getWidth();
+//                     unsigned lastViewRight = lastView->getX() + lastView->getWidth();
+//                     unsigned ourRight      = this->getX() + this->getWidth();
 
-                    if (lastViewRight <= ourRight)
-                    {
-                        unsigned difference = ourRight - lastViewRight;
+//                     if (lastViewRight <= ourRight)
+//                     {
+//                         unsigned difference = ourRight - lastViewRight;
 
-                        for (BoxLayoutChild* child : this->children)
-                        {
-                            View* view = child->view;
-                            view->setBoundaries(
-                                view->getX() + difference,
-                                view->getY(),
-                                view->getWidth(),
-                                view->getHeight());
-                            view->invalidate();
-                        }
-                    }
+//                         for (BoxLayoutChild* child : this->children)
+//                         {
+//                             View* view = child->view;
+//                             view->setBoundaries(
+//                                 view->getX() + difference,
+//                                 view->getY(),
+//                                 view->getWidth(),
+//                                 view->getHeight());
+//                             view->invalidate();
+//                         }
+//                     }
 
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
+//                     break;
+//                 }
+//                 default:
+//                     break;
+//             }
+//         }
 
-        // TODO: update width if needed (introduce entriesWidth)
-    }
-}
+//         // TODO: update width if needed (introduce entriesWidth)
+//     }
+// }
 
 void BoxLayout::setResize(bool resize)
 {

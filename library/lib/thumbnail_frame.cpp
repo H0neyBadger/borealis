@@ -51,18 +51,18 @@ void ThumbnailFrame::setContentView(View* view)
     this->invalidate();
 }
 
-void ThumbnailFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    // Resize content view
-    if (this->thumbnailContentView)
-    {
-        unsigned sidebarWidth = this->sidebar->getWidth();
-        this->thumbnailContentView->setWidth(this->getWidth() - sidebarWidth - this->leftPadding - this->rightPadding);
-    }
+// void ThumbnailFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     // Resize content view
+//     if (this->thumbnailContentView)
+//     {
+//         unsigned sidebarWidth = this->sidebar->getWidth();
+//         this->thumbnailContentView->setWidth(this->getWidth() - sidebarWidth - this->leftPadding - this->rightPadding);
+//     }
 
-    // Layout the rest
-    AppletFrame::layout(vg, style, stash);
-}
+//     // Layout the rest
+//     AppletFrame::layout(vg, style, stash);
+// }
 
 ThumbnailSidebar* ThumbnailFrame::getSidebar()
 {
@@ -92,7 +92,7 @@ Button* ThumbnailSidebar::getButton()
     return this->button;
 }
 
-void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void ThumbnailSidebar::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     if (this->image)
         this->image->frame(ctx);
@@ -106,67 +106,67 @@ void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
     this->button->frame(ctx);
 }
 
-void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    unsigned sidebarWidth = getWidth() - style->AppletFrame.separatorSpacing;
-    unsigned yAdvance     = getY() + style->ThumbnailSidebar.marginTopBottom;
-    unsigned titleX       = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
-    unsigned titleWidth   = sidebarWidth - style->ThumbnailSidebar.marginLeftRight;
+// void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     unsigned sidebarWidth = getWidth() - style->AppletFrame.separatorSpacing;
+//     unsigned yAdvance     = getY() + style->ThumbnailSidebar.marginTopBottom;
+//     unsigned titleX       = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
+//     unsigned titleWidth   = sidebarWidth - style->ThumbnailSidebar.marginLeftRight;
 
-    // Image
-    if (this->image)
-    {
-        unsigned imageX     = getX() + style->ThumbnailSidebar.marginLeftRight;
-        unsigned imageWidth = sidebarWidth - style->ThumbnailSidebar.marginLeftRight * 2;
+//     // Image
+//     if (this->image)
+//     {
+//         unsigned imageX     = getX() + style->ThumbnailSidebar.marginLeftRight;
+//         unsigned imageWidth = sidebarWidth - style->ThumbnailSidebar.marginLeftRight * 2;
 
-        this->image->setBoundaries(
-            imageX,
-            yAdvance,
-            imageWidth,
-            imageWidth);
+//         this->image->setBoundaries(
+//             imageX,
+//             yAdvance,
+//             imageWidth,
+//             imageWidth);
 
-        yAdvance += this->image->getHeight() + style->ThumbnailSidebar.marginTopBottom;
-    }
+//         yAdvance += this->image->getHeight() + style->ThumbnailSidebar.marginTopBottom;
+//     }
 
-    // Title
-    if (this->title)
-    {
-        this->title->setBoundaries(
-            titleX,
-            yAdvance,
-            titleWidth,
-            0 // height is dynamic
-        );
+//     // Title
+//     if (this->title)
+//     {
+//         this->title->setBoundaries(
+//             titleX,
+//             yAdvance,
+//             titleWidth,
+//             0 // height is dynamic
+//         );
 
-        // Call layout directly to update height
-        this->title->invalidate(true);
+//         // Call layout directly to update height
+//         this->title->invalidate();
 
-        yAdvance += this->title->getHeight() + style->ThumbnailSidebar.marginTopBottom / 2;
-    }
+//         yAdvance += this->title->getHeight() + style->ThumbnailSidebar.marginTopBottom / 2;
+//     }
 
-    // Subtitle
-    if (this->subTitle)
-    {
-        this->subTitle->setBoundaries(
-            titleX,
-            yAdvance,
-            titleWidth,
-            0 // height doesn't matter
-        );
+//     // Subtitle
+//     if (this->subTitle)
+//     {
+//         this->subTitle->setBoundaries(
+//             titleX,
+//             yAdvance,
+//             titleWidth,
+//             0 // height doesn't matter
+//         );
 
-        this->subTitle->invalidate();
-    }
+//         this->subTitle->invalidate();
+//     }
 
-    //Button
-    unsigned buttonWidth  = sidebarWidth - style->ThumbnailSidebar.buttonMargin * 2;
-    unsigned buttonHeight = style->ThumbnailSidebar.buttonHeight;
+//     //Button
+//     unsigned buttonWidth  = sidebarWidth - style->ThumbnailSidebar.buttonMargin * 2;
+//     unsigned buttonHeight = style->ThumbnailSidebar.buttonHeight;
 
-    this->button->setBoundaries(
-        getX() + style->ThumbnailSidebar.buttonMargin,
-        getY() + getHeight() - style->ThumbnailSidebar.marginTopBottom - buttonHeight,
-        buttonWidth,
-        buttonHeight);
-}
+//     this->button->setBoundaries(
+//         getX() + style->ThumbnailSidebar.buttonMargin,
+//         getY() + getHeight() - style->ThumbnailSidebar.marginTopBottom - buttonHeight,
+//         buttonWidth,
+//         buttonHeight);
+// }
 
 View* ThumbnailSidebar::getDefaultFocus()
 {

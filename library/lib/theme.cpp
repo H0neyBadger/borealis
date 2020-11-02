@@ -22,20 +22,78 @@
 namespace brls
 {
 
+static ThemeValues lightThemeValues = {
+    { "brls/background", nvgRGB(235, 235, 235) },
+
+    { "brls/applet_frame/separator", nvgRGB(45, 45, 45) },
+};
+
+static ThemeValues darkThemeValues = {
+    { "brls/background", nvgRGB(45, 45, 45) },
+
+    { "brls/applet_frame/separator", nvgRGB(255, 255, 255) },
+};
+
+static Theme lightTheme(&lightThemeValues);
+static Theme darkTheme(&lightThemeValues);
+
+ThemeValues::ThemeValues(std::initializer_list<std::pair<std::string, NVGcolor>> list)
+{
+    for (std::pair<std::string, NVGcolor> color : list)
+        this->values.insert(color);
+}
+
+void ThemeValues::addColor(std::string name, NVGcolor color)
+{
+    this->values.insert(std::make_pair(name, color));
+}
+
+NVGcolor ThemeValues::getColor(std::string name)
+{
+    if (this->values.count(name) == 0)
+        throw std::logic_error("Unknown theme value \"" + name + "\"");
+
+    return this->values[name];
+}
+
+Theme::Theme(ThemeValues* values)
+    : values(values)
+{
+}
+
+NVGcolor Theme::getColor(std::string name)
+{
+    return this->values->getColor(name);
+}
+
+void Theme::addColor(std::string name, NVGcolor color)
+{
+    return this->values->addColor(name, color);
+}
+
+NVGcolor Theme::operator[](std::string name)
+{
+    return this->getColor(name);
+}
+
+Theme getLightTheme()
+{
+    return lightTheme;
+}
+
+Theme getDarkTheme()
+{
+    return darkTheme;
+}
+
+/*
 HorizonLightTheme::HorizonLightTheme()
 {
-    this->backgroundColor[0] = 0.922f;
-    this->backgroundColor[1] = 0.922f;
-    this->backgroundColor[2] = 0.922f;
-    this->backgroundColorRGB = nvgRGB(235, 235, 235);
-
     this->textColor        = nvgRGB(51, 51, 51);
     this->descriptionColor = nvgRGB(140, 140, 140);
 
     this->notificationTextColor = nvgRGB(255, 255, 255);
     this->backdropColor         = nvgRGBA(0, 0, 0, 178);
-
-    this->separatorColor = nvgRGB(45, 45, 45);
 
     this->sidebarColor          = nvgRGB(240, 240, 240);
     this->activeTabColor        = nvgRGB(49, 79, 235);
@@ -78,18 +136,11 @@ HorizonLightTheme::HorizonLightTheme()
 
 HorizonDarkTheme::HorizonDarkTheme()
 {
-    this->backgroundColor[0] = 0.176f;
-    this->backgroundColor[1] = 0.176f;
-    this->backgroundColor[2] = 0.176f;
-    this->backgroundColorRGB = nvgRGB(45, 45, 45);
-
     this->textColor        = nvgRGB(255, 255, 255);
     this->descriptionColor = nvgRGB(163, 163, 163);
 
     this->notificationTextColor = nvgRGB(255, 255, 255);
     this->backdropColor         = nvgRGBA(0, 0, 0, 178);
-
-    this->separatorColor = nvgRGB(255, 255, 255);
 
     this->sidebarColor          = nvgRGB(50, 50, 50);
     this->activeTabColor        = nvgRGB(0, 255, 204);
@@ -129,5 +180,5 @@ HorizonDarkTheme::HorizonDarkTheme()
     this->dialogButtonColor          = nvgRGB(3, 251, 199);
     this->dialogButtonSeparatorColor = nvgRGB(103, 103, 103);
 }
-
+*/
 } // namespace brls

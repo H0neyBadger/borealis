@@ -79,7 +79,7 @@ void Dialog::setCancelable(bool cancelable)
     this->cancelable = cancelable;
 }
 
-void Dialog::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void Dialog::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     // Backdrop
     nvgFillColor(vg, a(ctx->theme->dialogBackdrop));
@@ -182,95 +182,95 @@ unsigned Dialog::getButtonsHeight()
         return 0;
 }
 
-void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    this->frameWidth  = style->Dialog.width;
-    this->frameHeight = style->Dialog.height;
+// void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     this->frameWidth  = style->Dialog.width;
+//     this->frameHeight = style->Dialog.height;
 
-    unsigned buttonsHeight = this->getButtonsHeight();
-    this->frameHeight += buttonsHeight;
+//     unsigned buttonsHeight = this->getButtonsHeight();
+//     this->frameHeight += buttonsHeight;
 
-    this->frameX = getWidth() / 2 - this->frameWidth / 2;
-    this->frameY = getHeight() / 2 - this->frameHeight / 2;
+//     this->frameX = getWidth() / 2 - this->frameWidth / 2;
+//     this->frameY = getHeight() / 2 - this->frameHeight / 2;
 
-    unsigned contentX      = this->frameX + style->Dialog.paddingLeftRight;
-    unsigned contentY      = this->frameY + style->Dialog.paddingTopBottom;
-    unsigned contentWidth  = this->frameWidth - style->Dialog.paddingLeftRight * 2;
-    unsigned contentHeight = this->frameHeight - style->Dialog.paddingTopBottom * 2 - buttonsHeight;
+//     unsigned contentX      = this->frameX + style->Dialog.paddingLeftRight;
+//     unsigned contentY      = this->frameY + style->Dialog.paddingTopBottom;
+//     unsigned contentWidth  = this->frameWidth - style->Dialog.paddingLeftRight * 2;
+//     unsigned contentHeight = this->frameHeight - style->Dialog.paddingTopBottom * 2 - buttonsHeight;
 
-    if (this->contentView)
-    {
-        // First layout to get height
-        this->contentView->setBoundaries(
-            contentX,
-            contentY,
-            contentWidth,
-            contentHeight);
+//     if (this->contentView)
+//     {
+//         // First layout to get height
+//         this->contentView->setBoundaries(
+//             contentX,
+//             contentY,
+//             contentWidth,
+//             contentHeight);
 
-        this->contentView->invalidate(true); // layout directly to get height
+//         this->contentView->invalidate(); // layout directly to get height
 
-        // Center the content view in the dialog
-        // or resize it if needed
-        unsigned newContentHeight = this->contentView->getHeight();
+//         // Center the content view in the dialog
+//         // or resize it if needed
+//         unsigned newContentHeight = this->contentView->getHeight();
 
-        int difference = contentHeight - newContentHeight;
+//         int difference = contentHeight - newContentHeight;
 
-        if (difference < 0)
-        {
-            this->frameHeight += -difference;
-        }
-        else
-        {
-            contentY += difference / 2;
+//         if (difference < 0)
+//         {
+//             this->frameHeight += -difference;
+//         }
+//         else
+//         {
+//             contentY += difference / 2;
 
-            this->contentView->setBoundaries(
-                contentX,
-                contentY,
-                contentWidth,
-                contentHeight);
+//             this->contentView->setBoundaries(
+//                 contentX,
+//                 contentY,
+//                 contentWidth,
+//                 contentHeight);
 
-            this->contentView->invalidate();
-        }
-    }
+//             this->contentView->invalidate();
+//         }
+//     }
 
-    // Buttons
-    if (this->verticalButtonsLayout)
-    {
-        this->verticalButtonsLayout->setBoundaries(
-            this->frameX,
-            this->frameY + this->frameHeight - buttonsHeight,
-            this->frameWidth,
-            style->Dialog.buttonHeight);
+//     // Buttons
+//     if (this->verticalButtonsLayout)
+//     {
+//         this->verticalButtonsLayout->setBoundaries(
+//             this->frameX,
+//             this->frameY + this->frameHeight - buttonsHeight,
+//             this->frameWidth,
+//             style->Dialog.buttonHeight);
 
-        // Only one big button
-        if (this->buttons.size() == 1)
-        {
-            this->verticalButtonsLayout->getChild(0)->setHeight(style->Dialog.buttonHeight);
-        }
-        // Two buttons on one row
-        else if (this->buttons.size() == 2)
-        {
-            this->horizontalButtonsLayout->setHeight(style->Dialog.buttonHeight);
+//         // Only one big button
+//         if (this->buttons.size() == 1)
+//         {
+//             this->verticalButtonsLayout->getChild(0)->setHeight(style->Dialog.buttonHeight);
+//         }
+//         // Two buttons on one row
+//         else if (this->buttons.size() == 2)
+//         {
+//             this->horizontalButtonsLayout->setHeight(style->Dialog.buttonHeight);
 
-            this->horizontalButtonsLayout->getChild(0)->setWidth(this->frameWidth / 2);
-            this->horizontalButtonsLayout->getChild(1)->setWidth(this->frameWidth / 2);
-        }
-        // Two rows: one with one button and one with two
-        else if (this->buttons.size() == 3)
-        {
-            this->verticalButtonsLayout->getChild(0)->setHeight(style->Dialog.buttonHeight);
+//             this->horizontalButtonsLayout->getChild(0)->setWidth(this->frameWidth / 2);
+//             this->horizontalButtonsLayout->getChild(1)->setWidth(this->frameWidth / 2);
+//         }
+//         // Two rows: one with one button and one with two
+//         else if (this->buttons.size() == 3)
+//         {
+//             this->verticalButtonsLayout->getChild(0)->setHeight(style->Dialog.buttonHeight);
 
-            this->horizontalButtonsLayout->setHeight(style->Dialog.buttonHeight);
+//             this->horizontalButtonsLayout->setHeight(style->Dialog.buttonHeight);
 
-            this->horizontalButtonsLayout->getChild(0)->setWidth(this->frameWidth / 2);
-            this->horizontalButtonsLayout->getChild(1)->setWidth(this->frameWidth / 2);
-        }
+//             this->horizontalButtonsLayout->getChild(0)->setWidth(this->frameWidth / 2);
+//             this->horizontalButtonsLayout->getChild(1)->setWidth(this->frameWidth / 2);
+//         }
 
-        this->verticalButtonsLayout->invalidate();
-        if (this->horizontalButtonsLayout)
-            this->horizontalButtonsLayout->invalidate();
-    }
-}
+//         this->verticalButtonsLayout->invalidate();
+//         if (this->horizontalButtonsLayout)
+//             this->horizontalButtonsLayout->invalidate();
+//     }
+// }
 
 void Dialog::rebuildButtons()
 {

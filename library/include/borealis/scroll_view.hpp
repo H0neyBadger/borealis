@@ -21,9 +21,6 @@
 namespace brls
 {
 
-// TODO: horizontal scrolling, either in ScrollView or in a separate class (like Android has)
-// TODO: Scrollbar
-
 // A view that automatically scrolls vertically
 // when one of its children gains focus
 class ScrollView : public View
@@ -51,13 +48,11 @@ class ScrollView : public View
   public:
     ~ScrollView();
 
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+    void draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx) override;
     void willAppear(bool resetState = false) override;
     void willDisappear(bool resetState = false) override;
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
-    void onWindowSizeChanged() override;
 
     void setContentView(View* view);
     View* getContentView();

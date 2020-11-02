@@ -68,37 +68,37 @@ Button::~Button()
         delete this->image;
 }
 
-void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    unsigned imageWidth  = this->label ? this->getHeight() : this->getWidth();
-    unsigned imageHeight = this->getHeight();
+// void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     unsigned imageWidth  = this->label ? this->getHeight() : this->getWidth();
+//     unsigned imageHeight = this->getHeight();
 
-    if (!this->image)
-        imageWidth = 0;
+//     if (!this->image)
+//         imageWidth = 0;
 
-    if (this->label != nullptr)
-    {
-        this->label->setWidth(this->getWidth() - imageWidth);
-        this->label->invalidate(true);
-        this->label->setBoundaries(
-            this->x + imageWidth,
-            this->y + this->getHeight() / 2 - this->label->getHeight() / 2,
-            this->label->getWidth(),
-            this->label->getHeight());
-        this->label->invalidate();
-    }
-    if (this->image != nullptr)
-    {
-        this->image->setHeight(imageHeight);
-        this->image->setWidth(imageWidth);
-        this->image->invalidate(true);
-        this->image->setBoundaries(
-            this->x,
-            this->y + this->getHeight() / 2 - this->image->getHeight() / 2,
-            this->image->getWidth(),
-            this->image->getHeight());
-    }
-}
+//     if (this->label != nullptr)
+//     {
+//         this->label->setWidth(this->getWidth() - imageWidth);
+//         this->label->invalidate();
+//         this->label->setBoundaries(
+//             this->x + imageWidth,
+//             this->y + this->getHeight() / 2 - this->label->getHeight() / 2,
+//             this->label->getWidth(),
+//             this->label->getHeight());
+//         this->label->invalidate();
+//     }
+//     if (this->image != nullptr)
+//     {
+//         this->image->setHeight(imageHeight);
+//         this->image->setWidth(imageWidth);
+//         this->image->invalidate();
+//         this->image->setBoundaries(
+//             this->x,
+//             this->y + this->getHeight() / 2 - this->image->getHeight() / 2,
+//             this->image->getWidth(),
+//             this->image->getHeight());
+//     }
+// }
 
 Button* Button::setLabel(std::string label)
 {
@@ -108,24 +108,24 @@ Button* Button::setLabel(std::string label)
     this->label = new Label(this->getLabelStyle(), label, true);
 
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
-    this->label->setParent(this);
+    // this->label->setParent(this); TODO: restore
 
     return this;
 }
 
-Button* Button::setImage(std::string path)
+/* Button* Button::setImage(std::string path)
 {
     this->image = new Image(path);
-    this->image->setParent(this);
+    // this->image->setParent(this); TODO: restore
     return this;
-}
+} TODO: restore */
 
-Button* Button::setImage(unsigned char* buffer, size_t bufferSize)
+/* Button* Button::setImage(unsigned char* buffer, size_t bufferSize)
 {
     this->image = new Image(buffer, bufferSize);
-    this->image->setParent(this);
+    // this->image->setParent(this); TODO: restore
     return this;
-}
+} TODO: restore */
 
 void Button::setState(ButtonState state)
 {
@@ -139,7 +139,7 @@ ButtonState Button::getState()
     return this->state;
 }
 
-void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
+void Button::getHighlightInsets(float* top, float* right, float* bottom, float* left)
 {
     if (this->style == ButtonStyle::DIALOG)
     {
@@ -155,7 +155,8 @@ void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom
     *left        = style->Button.highlightInset;
 }
 
-void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+// TODO: the button draw method overflows and clips (because of the shadow), try using the yg border property (private)
+void Button::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     float cornerRadius = this->cornerRadiusOverride ? this->cornerRadiusOverride : (float)style->Button.cornerRadius;
 

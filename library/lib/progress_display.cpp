@@ -46,32 +46,32 @@ void ProgressDisplay::setProgress(int current, int max)
     this->label->setText(labelText);
 }
 
-void ProgressDisplay::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    if (this->label)
-    {
-        this->label->setWidth(style->ProgressDisplay.percentageLabelWidth);
-        this->label->invalidate(true);
-        this->label->setBoundaries(
-            this->x + this->width - this->label->getWidth() / 2,
-            this->y + this->height / 2 - this->label->getHeight() / 2,
-            this->label->getWidth(),
-            this->label->getHeight());
-    }
+// void ProgressDisplay::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     if (this->label)
+//     {
+//         this->label->setWidth(style->ProgressDisplay.percentageLabelWidth);
+//         this->label->invalidate();
+//         this->label->setBoundaries(
+//             this->x + this->width - this->label->getWidth() / 2,
+//             this->y + this->height / 2 - this->label->getHeight() / 2,
+//             this->label->getWidth(),
+//             this->label->getHeight());
+//     }
 
-    if (this->spinner)
-    {
-        this->spinner->setWidth(this->height);
-        this->spinner->setHeight(this->height);
-        this->spinner->setBoundaries(
-            this->x,
-            this->y,
-            this->spinner->getWidth(),
-            this->spinner->getHeight());
-    }
-}
+//     if (this->spinner)
+//     {
+//         this->spinner->setWidth(this->height);
+//         this->spinner->setHeight(this->height);
+//         this->spinner->setBoundaries(
+//             this->x,
+//             this->y,
+//             this->spinner->getWidth(),
+//             this->spinner->getHeight());
+//     }
+// }
 
-void ProgressDisplay::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void ProgressDisplay::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     unsigned progressBarWidth = width;
     unsigned progressBarX     = x;

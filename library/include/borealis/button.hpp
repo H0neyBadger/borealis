@@ -59,13 +59,12 @@ class Button : public View
     float cornerRadiusOverride = 0;
 
   public:
-    Button(ButtonStyle style = ButtonStyle::PRIMARY);
+    Button(ButtonStyle style = ButtonStyle::REGULAR);
     ~Button();
 
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx) override;
     virtual bool onClick();
-    void layout(NVGcontext* vg, Style* style, FontStash* stash);
-    void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
+    void getHighlightInsets(float* top, float* right, float* bottom, float* left) override;
 
     ButtonState getState();
     void setState(ButtonState state);

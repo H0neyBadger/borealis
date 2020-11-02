@@ -61,8 +61,7 @@ class Image : public View
     Image& operator=(const Image& cp_assign);
     Image& operator=(Image&& mv_assign);
 
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+    void draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx) override;
 
     void setImage(unsigned char* buffer, size_t bufferSize);
     void setImage(std::string imagePath);

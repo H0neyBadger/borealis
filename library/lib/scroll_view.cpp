@@ -24,7 +24,7 @@
 namespace brls
 {
 
-void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+void ScrollView::draw(NVGcontext* vg, float x, float y, float width, float height, Style* style, FrameContext* ctx)
 {
     if (!this->contentView)
         return;
@@ -35,7 +35,7 @@ void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
 
     // Enable scissoring
     nvgSave(vg);
-    nvgScissor(vg, x, y, this->width, this->height);
+    nvgScissor(vg, x, y, this->getWidth(), this->getHeight());
 
     // Draw content view
     this->contentView->frame(ctx);
@@ -49,31 +49,31 @@ unsigned ScrollView::getYCenter(View* view)
     return view->getY() + view->getHeight() / 2;
 }
 
-void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
-{
-    this->prebakeScrolling();
+// void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
+// {
+//     this->prebakeScrolling();
 
-    // Update scrolling if needed
-    if (this->updateScrollingOnNextLayout)
-    {
-        this->updateScrollingOnNextLayout = false;
-        this->updateScrolling(false);
-    }
+//     // Update scrolling if needed
+//     if (this->updateScrollingOnNextLayout)
+//     {
+//         this->updateScrollingOnNextLayout = false;
+//         this->updateScrolling(false);
+//     }
 
-    // Layout content view
-    if (this->contentView)
-    {
-        unsigned contentHeight = this->contentView->getHeight();
-        this->contentView->setBoundaries(
-            this->getX(),
-            this->getY() - roundf(this->scrollY * (float)contentHeight),
-            this->getWidth(),
-            contentHeight);
-        this->contentView->invalidate();
-    }
+//     // Layout content view
+//     if (this->contentView)
+//     {
+//         unsigned contentHeight = this->contentView->getHeight();
+//         this->contentView->setBoundaries(
+//             this->getX(),
+//             this->getY() - roundf(this->scrollY * (float)contentHeight),
+//             this->getWidth(),
+//             contentHeight);
+//         this->contentView->invalidate();
+//     }
 
-    this->ready = true;
-}
+//     this->ready = true;
+// }
 
 void ScrollView::willAppear(bool resetState)
 {
@@ -125,8 +125,11 @@ View* ScrollView::getContentView()
 void ScrollView::prebakeScrolling()
 {
     // Prebaked values for scrolling
-    this->middleY = this->y + this->height / 2;
-    this->bottomY = this->y + this->height;
+    float y      = this->getY();
+    float height = this->getHeight();
+
+    this->middleY = y + height / 2;
+    this->bottomY = y + height;
 }
 
 bool ScrollView::updateScrolling(bool animated)
@@ -146,8 +149,8 @@ bool ScrollView::updateScrolling(bool animated)
     float newScroll                    = -(this->scrollY * contentHeight) - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
 
     // Bottom boundary
-    if ((float)this->y + newScroll + contentHeight < (float)this->bottomY)
-        newScroll = (float)this->height - contentHeight;
+    if ((float)this->getY() + newScroll + contentHeight < (float)this->bottomY)
+        newScroll = (float)this->getHeight() - contentHeight;
 
     // Top boundary
     if (newScroll > 0.0f)
@@ -191,7 +194,7 @@ void ScrollView::startScrolling(bool animated, float newScroll)
         this->scrollY = newScroll;
     }
 
-    this->invalidate(!animated); // layout immediately if not animated
+    this->invalidate();
 }
 
 void ScrollView::scrollAnimationTick()
