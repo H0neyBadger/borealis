@@ -156,6 +156,8 @@ class BoxLayout : public View
 
     View* getChild(size_t i);
 
+    int getChildIndex(View* view);
+
     /**
      * If enabled, will force the layout to resize itself
      * to match the children size

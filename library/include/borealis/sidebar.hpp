@@ -65,6 +65,7 @@ class SidebarItem : public View
     void onFocusGained() override;
 
     void setAssociatedView(View* view);
+
     View* getAssociatedView();
 
     ~SidebarItem();
@@ -79,6 +80,9 @@ class Sidebar : public BoxLayout
     Sidebar();
 
     SidebarItem* addItem(std::string label, View* view);
+
+    View* popItem(SidebarItem* item);
+
     void addSeparator();
 
     void setActive(SidebarItem* item);

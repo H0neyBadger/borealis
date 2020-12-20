@@ -78,6 +78,25 @@ SidebarItem* Sidebar::addItem(std::string label, View* view)
     return item;
 }
 
+View* Sidebar::popItem(SidebarItem* item)
+{
+    View* view = item->getAssociatedView();
+    item->setAssociatedView(nullptr);
+    setActive(nullptr);
+
+    int index = getChildIndex(item);
+    if (index < 0)
+    {
+        return nullptr;
+    }
+    else
+    {
+        this->lastFocus = 0;
+        this->removeView(index, true);
+        return view;
+    }
+}
+
 void Sidebar::addSeparator()
 {
     SidebarSeparator* separator = new SidebarSeparator();
@@ -90,7 +109,8 @@ void Sidebar::setActive(SidebarItem* active)
         currentActive->setActive(false);
 
     currentActive = active;
-    active->setActive(true);
+    if (active)
+        active->setActive(true);
 }
 
 SidebarItem::SidebarItem(std::string label, Sidebar* sidebar)

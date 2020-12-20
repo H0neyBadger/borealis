@@ -134,14 +134,35 @@ View* BoxLayout::getNextFocus(FocusDirection direction, View* currentView)
     return currentFocus;
 }
 
+int BoxLayout::getChildIndex(View* view)
+{
+    // TODO verify parent user data
+    return *(int*)view->getParentUserData();
+}
+
 void BoxLayout::removeView(int index, bool free)
 {
     BoxLayoutChild* toRemove = this->children[index];
+
+    int position = *(int*)toRemove->view->getParentUserData();
+
     toRemove->view->willDisappear(true);
     if (free)
         delete toRemove->view;
     delete toRemove;
     this->children.erase(this->children.begin() + index);
+
+    // iterate over all decedent childes to update the position
+    for (auto it = this->children.begin() + index; it != this->children.end(); ++it)
+    {
+        BoxLayoutChild* toUpdate = *it;
+        size_t* userdata         = (size_t*)malloc(sizeof(size_t));
+        *userdata                = position;
+
+        int oldPosition = *(int*)toUpdate->view->getParentUserData();
+        toUpdate->view->setParent(this, userdata);
+        position = oldPosition;
+    }
 }
 
 void BoxLayout::clear(bool free)

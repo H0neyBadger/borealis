@@ -39,7 +39,10 @@ class TabFrame : public AppletFrame
      * before the TabFrame is itself added to
      * the view hierarchy
      */
-    void addTab(std::string label, View* view);
+    SidebarItem* addTab(std::string label, View* view);
+
+    View* popTab(SidebarItem* item);
+
     void addSeparator();
 
     View* getDefaultFocus() override;
