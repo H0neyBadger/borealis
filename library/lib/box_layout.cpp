@@ -83,34 +83,32 @@ size_t BoxLayout::getViewsCount()
 
 View* BoxLayout::getDefaultFocus()
 {
+    printf("BoxLayout::getDefaultFocus %p\n", this);
     // Focus default focus first
     if (this->defaultFocusedIndex < this->children.size())
     {
-        View* newFocus = this->children[this->defaultFocusedIndex]->view->getDefaultFocus();
-
+        View* newFocus = (*std::next(this->children.begin(), this->defaultFocusedIndex))->view->getDefaultFocus();
         if (newFocus)
             return newFocus;
     }
 
     // Fallback to finding the first focusable view
-    for (size_t i = 0; i < this->children.size(); i++)
+    for (BoxLayoutChild* child : this->children)
     {
-        View* newFocus = this->children[i]->view->getDefaultFocus();
-
+        View* newFocus = child->view->getDefaultFocus();
         if (newFocus)
             return newFocus;
     }
-
     return nullptr;
 }
 
 View* BoxLayout::getNextFocus(FocusDirection direction, View* currentView)
 {
-    void* parentUserData = currentView->getParentUserData();
-
+    printf("direction %d\n", direction);
     // Return nullptr immediately if focus direction mismatches the layout direction
     if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
     {
+        printf("ret nullptr\n");
         return nullptr;
     }
 
@@ -122,51 +120,47 @@ View* BoxLayout::getNextFocus(FocusDirection direction, View* currentView)
         offset = -1;
     }
 
-    size_t currentFocusIndex = *((size_t*)parentUserData) + offset;
-    View* currentFocus       = nullptr;
+    View* currentFocus = nullptr;
 
-    while (!currentFocus && currentFocusIndex >= 0 && currentFocusIndex < this->children.size())
+    BoxLayoutChildIterator currentFocusIterator = *((BoxLayoutChildIterator*)currentView->getParentUserData());
+    currentFocusIterator                        = std::next(currentFocusIterator, offset);
+
+    while (!currentFocus && currentFocusIterator != this->children.end())
     {
-        currentFocus = this->children[currentFocusIndex]->view->getDefaultFocus();
-        currentFocusIndex += offset;
+        currentFocus = (*currentFocusIterator)->view->getDefaultFocus();
+        printf("Offset %d to %p\n", offset, currentFocusIterator);
+        currentFocusIterator = std::next(currentFocusIterator, offset);
     }
-
+    printf("ret %p\n", currentFocus);
     return currentFocus;
 }
 
-int BoxLayout::getChildIndex(View* view)
+View* BoxLayout::removeView(BoxLayoutChildIterator childIterator, bool free)
 {
-    // TODO verify parent user data
-    return *(int*)view->getParentUserData();
+    View* view = (*childIterator)->view;
+    printf("BoxLayout::removeView %p free: %d childIterator %p\n", view, free, childIterator);
+    view->willDisappear(true);
+    if (free)
+    {
+        delete view;
+        view = nullptr;
+    }
+    this->children.erase(childIterator);
+    delete (*childIterator);
+
+    return view;
 }
 
-void BoxLayout::removeView(int index, bool free)
+View* BoxLayout::removeView(int index, bool free)
 {
-    BoxLayoutChild* toRemove = this->children[index];
-
-    int position = *(int*)toRemove->view->getParentUserData();
-
-    toRemove->view->willDisappear(true);
-    if (free)
-        delete toRemove->view;
-    delete toRemove;
-    this->children.erase(this->children.begin() + index);
-
-    // iterate over all decedent childes to update the position
-    for (auto it = this->children.begin() + index; it != this->children.end(); ++it)
-    {
-        BoxLayoutChild* toUpdate = *it;
-        size_t* userdata         = (size_t*)malloc(sizeof(size_t));
-        *userdata                = position;
-
-        int oldPosition = *(int*)toUpdate->view->getParentUserData();
-        toUpdate->view->setParent(this, userdata);
-        position = oldPosition;
-    }
+    printf("BoxLayout::removeView from index %d\n", index);
+    BoxLayoutChildIterator childIterator = std::next(this->children.begin(), index);
+    return this->removeView(childIterator, free);
 }
 
 void BoxLayout::clear(bool free)
 {
+    printf("BoxLayout::clear %d free\n", free);
     while (!this->children.empty())
         this->removeView(0, free);
 }
@@ -179,9 +173,9 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
         unsigned entriesHeight = 0;
         int yAdvance           = this->y + this->marginTop;
 
-        for (size_t i = 0; i < this->children.size(); i++)
+        for (BoxLayoutChildIterator it = this->children.begin(); it != this->children.end(); ++it)
         {
-            BoxLayoutChild* child = this->children[i];
+            BoxLayoutChild* child = *it;
             unsigned childHeight  = child->view->getHeight();
 
             if (child->fill)
@@ -199,7 +193,9 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
             childHeight = child->view->getHeight();
 
             int spacing = (int)this->spacing;
-            View* next  = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+
+            BoxLayoutChildIterator next_it = std::next(it);
+            View* next                     = next_it != this->children.end() ? (*next_it)->view : nullptr;
 
             this->customSpacing(child->view, next, &spacing);
 
@@ -223,9 +219,10 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
     {
         // Layout
         int xAdvance = this->x + this->marginLeft;
-        for (size_t i = 0; i < this->children.size(); i++)
+
+        for (BoxLayoutChildIterator it = this->children.begin(); it != this->children.end(); ++it)
         {
-            BoxLayoutChild* child = this->children[i];
+            BoxLayoutChild* child = *it;
             unsigned childWidth   = child->view->getWidth();
 
             if (child->fill)
@@ -244,7 +241,8 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             int spacing = (int)this->spacing;
 
-            View* next = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+            BoxLayoutChildIterator next_it = std::next(it);
+            View* next                     = next_it != this->children.end() ? (*next_it)->view : nullptr;
 
             this->customSpacing(child->view, next, &spacing);
 
@@ -264,7 +262,8 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                 {
                     // Take the remaining empty space between the last view's
                     // right boundary and ours and push all views by this amount
-                    View* lastView = this->children[this->children.size() - 1]->view;
+                    BoxLayoutChildIterator prev_it = std::prev(this->children.end());
+                    View* lastView                 = (*prev_it)->view;
 
                     unsigned lastViewRight = lastView->getX() + lastView->getWidth();
                     unsigned ourRight      = this->getX() + this->getWidth();
@@ -302,7 +301,7 @@ void BoxLayout::setResize(bool resize)
     this->invalidate();
 }
 
-void BoxLayout::addView(View* view, bool fill, bool resetState)
+BoxLayoutChildIterator BoxLayout::addView(View* view, bool fill, bool resetState)
 {
     BoxLayoutChild* child = new BoxLayoutChild();
     child->view           = view;
@@ -310,20 +309,22 @@ void BoxLayout::addView(View* view, bool fill, bool resetState)
 
     this->children.push_back(child);
 
-    size_t position = this->children.size() - 1;
+    BoxLayoutChildIterator childIterator = std::prev(this->children.end());
 
-    size_t* userdata = (size_t*)malloc(sizeof(size_t));
-    *userdata        = position;
+    BoxLayoutChildIterator* userdata = (BoxLayoutChildIterator*)malloc(sizeof(BoxLayoutChildIterator));
+    *userdata                        = childIterator;
 
     view->setParent(this, userdata);
 
     view->willAppear(resetState);
     this->invalidate();
+
+    return childIterator;
 }
 
 View* BoxLayout::getChild(size_t index)
 {
-    return this->children[index]->view;
+    return (*std::next(this->children.begin(), index))->view;
 }
 
 bool BoxLayout::isEmpty()
@@ -339,12 +340,13 @@ bool BoxLayout::isChildFocused()
 void BoxLayout::onChildFocusGained(View* child)
 {
     this->childFocused = true;
-
+    printf("BoxLayout::onChildFocusGained %p\n", child);
     // Remember focus if needed
     if (this->rememberFocus)
     {
-        size_t index              = *((size_t*)child->getParentUserData());
-        this->defaultFocusedIndex = index;
+        BoxLayoutChildIterator childIterator = *((BoxLayoutChildIterator*)child->getParentUserData());
+        this->defaultFocusedIndex            = std::distance(this->children.begin(), childIterator);
+        printf("defaultFocusedIndex %d\n", this->defaultFocusedIndex);
     }
 
     View::onChildFocusGained(child);
@@ -359,13 +361,13 @@ void BoxLayout::onChildFocusLost(View* child)
 
 BoxLayout::~BoxLayout()
 {
-    for (BoxLayoutChild* child : this->children)
+    for (std::list<BoxLayoutChild*>::reverse_iterator it = this->children.rbegin(); it != this->children.rend(); it++)
     {
+        BoxLayoutChild* child = (*it);
         child->view->willDisappear(true);
         delete child->view;
         delete child;
     }
-
     this->children.clear();
 }
 

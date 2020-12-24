@@ -21,7 +21,7 @@
 #pragma once
 
 #include <borealis/view.hpp>
-#include <vector>
+#include <list>
 
 namespace brls
 {
@@ -50,6 +50,8 @@ class BoxLayoutChild
     bool fill; // should the child fill the remaining space?
 };
 
+typedef std::list<BoxLayoutChild*>::iterator BoxLayoutChildIterator;
+
 // A basic horizontal or vertical box layout :
 // - Children can currently only be stretched to full width (vertical) or height (horizontal)
 // - Only works with children with fixed width (horizontal) or height (vertical)
@@ -67,7 +69,7 @@ class BoxLayout : public View
     BoxLayoutGravity gravity = BoxLayoutGravity::DEFAULT;
 
   protected:
-    std::vector<BoxLayoutChild*> children;
+    std::list<BoxLayoutChild*> children;
 
     size_t originalDefaultFocus = 0;
     size_t defaultFocusedIndex  = 0;
@@ -124,7 +126,7 @@ class BoxLayout : public View
       * If fill is set to true, the child will
       * fill the remaining space
       */
-    void addView(View* view, bool fill = false, bool resetState = false);
+    BoxLayoutChildIterator addView(View* view, bool fill = false, bool resetState = false);
 
     /**
       * Removes the view at specified
@@ -135,7 +137,8 @@ class BoxLayout : public View
       * implemented - currently removing a view will
       * most likely result in memory corruption
       */
-    void removeView(int index, bool free = true);
+    View* removeView(BoxLayoutChildIterator childIterator, bool free = true);
+    View* removeView(int index, bool free = true);
 
     /**
      * Removes all views
@@ -151,12 +154,10 @@ class BoxLayout : public View
 
     bool isChildFocused();
 
-    void setFocusedIndex(unsigned index);
+    void setFocusedIterator(BoxLayoutChildIterator childIterator);
     size_t getViewsCount();
 
     View* getChild(size_t i);
-
-    int getChildIndex(View* view);
 
     /**
      * If enabled, will force the layout to resize itself

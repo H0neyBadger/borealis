@@ -36,18 +36,19 @@ Sidebar::Sidebar()
     this->setSpacing(style->Sidebar.spacing);
     this->setMargins(style->Sidebar.marginTop, style->Sidebar.marginRight, style->Sidebar.marginBottom, style->Sidebar.marginLeft);
     this->setBackground(ViewBackground::SIDEBAR);
+    this->lastFocus = this->children.begin();
 }
 
 View* Sidebar::getDefaultFocus()
 {
     // Sanity check
-    if (this->lastFocus >= this->children.size())
-        this->lastFocus = 0;
+    if (this->lastFocus == this->children.end())
+        this->lastFocus = this->children.begin();
 
     View* toFocus { nullptr };
     // Try to focus last focused one
     if (this->children.size() != 0)
-        toFocus = this->children[this->lastFocus]->view->getDefaultFocus();
+        toFocus = (*(this->lastFocus))->view->getDefaultFocus();
 
     if (toFocus)
         return toFocus;
@@ -58,9 +59,9 @@ View* Sidebar::getDefaultFocus()
 
 void Sidebar::onChildFocusGained(View* child)
 {
-    size_t position = *((size_t*)child->getParentUserData());
+    BoxLayoutChildIterator childIterator = *(BoxLayoutChildIterator*)child->getParentUserData();
 
-    this->lastFocus = position;
+    this->lastFocus = childIterator;
 
     BoxLayout::onChildFocusGained(child);
 }
@@ -78,23 +79,19 @@ SidebarItem* Sidebar::addItem(std::string label, View* view)
     return item;
 }
 
-View* Sidebar::popItem(SidebarItem* item)
+View* Sidebar::popItem(BoxLayoutChildIterator childIterator)
 {
-    View* view = item->getAssociatedView();
+    SidebarItem* item = dynamic_cast<SidebarItem*>((*childIterator)->view);
+    printf("Sidebar::popItem item childIterator %p %p\n", childIterator, item);
     item->setAssociatedView(nullptr);
     setActive(nullptr);
-
-    int index = getChildIndex(item);
-    if (index < 0)
-    {
-        return nullptr;
-    }
+    if (childIterator != this->children.begin())
+        this->lastFocus = std::prev(childIterator);
     else
-    {
-        this->lastFocus = 0;
-        this->removeView(index, true);
-        return view;
-    }
+        this->lastFocus = this->children.begin();
+
+    View* view = this->removeView(childIterator, false);
+    return view;
 }
 
 void Sidebar::addSeparator()

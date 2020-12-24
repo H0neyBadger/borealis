@@ -21,7 +21,6 @@
 
 #include <borealis/box_layout.hpp>
 #include <string>
-#include <vector>
 
 namespace brls
 {
@@ -81,7 +80,7 @@ class Sidebar : public BoxLayout
 
     SidebarItem* addItem(std::string label, View* view);
 
-    View* popItem(SidebarItem* item);
+    View* popItem(BoxLayoutChildIterator item);
 
     void addSeparator();
 
@@ -90,7 +89,7 @@ class Sidebar : public BoxLayout
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
 
-    size_t lastFocus = 0;
+    BoxLayoutChildIterator lastFocus;
 };
 
 } // namespace brls

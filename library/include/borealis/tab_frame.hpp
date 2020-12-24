@@ -22,7 +22,6 @@
 #include <borealis/applet_frame.hpp>
 #include <borealis/sidebar.hpp>
 #include <string>
-#include <vector>
 
 namespace brls
 {
@@ -39,9 +38,9 @@ class TabFrame : public AppletFrame
      * before the TabFrame is itself added to
      * the view hierarchy
      */
-    SidebarItem* addTab(std::string label, View* view);
+    BoxLayoutChildIterator addTab(std::string label, View* view);
 
-    View* popTab(SidebarItem* item);
+    View* popTab(BoxLayoutChildIterator item);
 
     void addSeparator();
 

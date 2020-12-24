@@ -69,7 +69,7 @@ void TabFrame::switchToView(View* view)
         this->layout->addView(this->rightPane, true, true); // addView() calls willAppear()
 }
 
-SidebarItem* TabFrame::addTab(std::string label, View* view)
+BoxLayoutChildIterator TabFrame::addTab(std::string label, View* view)
 {
     SidebarItem* item = this->sidebar->addItem(label, view);
     item->getFocusEvent()->subscribe([this](View* view) {
@@ -83,12 +83,13 @@ SidebarItem* TabFrame::addTab(std::string label, View* view)
         Logger::debug("Switching to the first tab");
         this->switchToView(view);
     }
-    return item;
+
+    return *((BoxLayoutChildIterator*)item->getParentUserData());
 }
 
-View* TabFrame::popTab(SidebarItem* item)
+View* TabFrame::popTab(BoxLayoutChildIterator childIterator)
 {
-    View* view = this->sidebar->popItem(item);
+    View* view = this->sidebar->popItem(childIterator);
     return view;
 }
 
